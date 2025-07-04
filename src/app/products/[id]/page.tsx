@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { LogoImpacta } from '@/components/LogoImpacta'; // ajuste conforme seu path
+import { LogoImpacta } from '@/components/LogoImpacta';
 
 type Produto = {
     id: number;
@@ -24,6 +24,23 @@ export async function generateStaticParams() {
 }
 
 export const revalidate = 60;
+
+export async function generateMetadata({ params }: { params: { id: string } }) {
+    const res = await fetch(`https://jsonplaceholder.typicode.com/users/${params.id}`);
+    if (!res.ok) return { title: 'Usuário não encontrado' };
+
+    const produto: Produto = await res.json();
+
+    return {
+        title: `Perfil de ${produto.name}`,
+        description: `Informações do usuário ${produto.name}, colaborador da empresa ${produto.company.name}.`,
+        openGraph: {
+            title: `Usuário: ${produto.name}`,
+            description: produto.company.catchPhrase,
+            url: `https://seusite.com/products/${produto.id}`,
+        },
+    };
+}
 
 export default async function ProductPage({ params }: { params: { id: string } }) {
     const id = params.id;
