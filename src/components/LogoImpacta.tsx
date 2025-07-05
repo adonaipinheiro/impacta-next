@@ -2,8 +2,9 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { memo } from 'react';
 
-export function LogoImpacta() {
+const Logo = () => {
     return (
         <Link href="/" className="block w-fit">
             <Image
@@ -17,3 +18,5 @@ export function LogoImpacta() {
         </Link>
     );
 }
+
+export const LogoImpacta = memo(Logo);
